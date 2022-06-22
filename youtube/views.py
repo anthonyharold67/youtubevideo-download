@@ -2,6 +2,8 @@
 from django.shortcuts import render, redirect
 from pytube import *
 from django.views.generic import View 
+import os
+from pathlib import Path
 
 
 class home(View):
@@ -32,9 +34,10 @@ class home(View):
         elif request.POST.get('download-vid'):
             self.url = request.POST.get('given_url')
             video = YouTube(self.url)
+            path_to_download_folder = str(os.path.join(Path.home(), "Downloads"))
             # stream = [x for x in video.streams.filter(progressive=True)]
             video_qual = video.streams[int(request.POST.get('download-vid')) - 1]
-            video_qual.download()
+            video_qual.download(path_to_download_folder)
             return redirect('home')
 
         return render(request,'youtube/youtube.html')
